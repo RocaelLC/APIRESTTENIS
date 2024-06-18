@@ -29,25 +29,33 @@ public class ProductoTenisServiceImplTest {
     }
 
     @Test
-    public void getProductoByIdTest() {
+    public void testGetProductoById_ProductoExistente() {
+        // Arrange
         ProductoTenis producto = new ProductoTenis();
         producto.setId("1");
         producto.setNombre("Producto 1");
         producto.setPrecio(100.0);
 
-        when(productoTenisRepository.findById("1")).thenReturn(Optional.of(producto));
+        when(productoTenisRepository.findById(anyString())).thenReturn(Optional.of(producto));
 
+        // Act
         ProductoTenis foundProducto = productoTenisService.getProductoById("1");
 
+        // Assert
         assertNotNull(foundProducto);
         assertEquals("Producto 1", foundProducto.getNombre());
+
+        // Verify
+        verify(productoTenisRepository, times(1)).findById("1");
     }
 
     @Test
-    public void getProductoByIdNotFoundTest() {
-        when(productoTenisRepository.findById("1")).thenReturn(Optional.empty());
+    public void testGetProductoById_ProductoNoEncontrado() {
+        // Arrange
+        when(productoTenisRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ProductoNotFoundException.class, () -> {
+        // Act & Assert
+        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class, () -> {
             productoTenisService.getProductoById("1");
         });
 
@@ -55,5 +63,8 @@ public class ProductoTenisServiceImplTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+
+        // Verify
+        verify(productoTenisRepository, times(1)).findById("1");
     }
 }
