@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                // Compilar el proyecto utilizando Maven
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Ejecutar pruebas unitarias
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Desplegar la aplicación en un servidor
+                // (Reemplaza esta línea con los comandos para tu caso específico)
+                sh 'echo "Deploying application"'
+            }
+        }
+    }
+
+    post {
+        success {
+            // Notifica si el pipeline se ejecuta con éxito
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            // Notifica si el pipeline falla
+            echo 'Pipeline failed!'
+        }
+    }
+}
